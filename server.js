@@ -1,3 +1,4 @@
+var https = require('https');
 // Listen on a specific host via the HOST environment variable
 var host = process.env.HOST || '0.0.0.0';
 // Listen on a specific port via the PORT environment variable
@@ -44,6 +45,30 @@ cors_proxy.createServer({
     // Do not add X-Forwarded-For, etc. headers, because Heroku already adds it.
     xfwd: false,
   },
-}).listen(port, host, function() {
+}).listen(port, host, function () {
   console.log('Running CORS Anywhere on ' + host + ':' + port);
 });
+
+setInterval(function () {
+  // Construct the request
+  var requestDetails = {
+    'protocol': 'https:',
+    'hostname': 'proxy-server-2.onrender.com',
+    'method': 'GET',
+    'path': '/',
+  };
+
+  var req = https.request(requestDetails, function (res) {
+    // Grab the status of the sent request
+    var status = res.statusCode;
+    console.log(status);
+
+  });
+
+  // Bind to the error event so it doesn't get thrown
+  req.on('error', function (e) {
+    console.log(e);
+  });
+  // End the request
+  req.end();
+}, 1000);
