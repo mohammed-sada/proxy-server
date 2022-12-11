@@ -71,4 +71,4 @@ setInterval(function () {
   });
   // End the request
   req.end();
-}, 1000);
+}, 3 * 60 * 1000);
